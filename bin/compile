@@ -27,22 +27,21 @@ function update() {
 }
 
 function setup_default_env (){
-  echo "export $1=\$$1:/app/sfdx/$2" >> $PROFILE_PATH
+  echo "export $1=\$$1:/app/vendor/sfdx/$2" >> $PROFILE_PATH
 }
 
 function install_sfdx_cli() {
   local URL='https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz'
   update "Downloading Salesforce CLI tarball ..."
-  cd $BUILD_DIR
+  cd "$BUILD_DIR/vendor"
   curl -fsSL "$URL" | tar xJ
-  echo $BUILD_DIR
 }
 
 function update_sfdx() {
-  cd $BUILD_DIR
-  $BUILD_DIR/sfdx/bin/sfdx update
-  $BUILD_DIR/sfdx/bin/sfdx --version
-  $BUILD_DIR/sfdx/bin/sfdx plugins --core
+  cd $BUILD_DIR/vendor
+  ./sfdx/bin/sfdx update
+  ./sfdx/bin/sfdx --version
+  ./sfdx/bin/sfdx plugins --core
 }
 
 header 'Welcome to salesforce-cli-buildpack!'
@@ -54,7 +53,7 @@ setup_default_env PATH "bin"
 update "Starting CLI installation ..."
 
 install_sfdx_cli
-#update_sfdx
+update_sfdx
 
 header "DONE! Completed in $(($SECONDS - $START_TIME))s"
 
