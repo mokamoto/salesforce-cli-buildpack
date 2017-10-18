@@ -33,12 +33,14 @@ function setup_default_env (){
 function install_sfdx_cli() {
   local URL='https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz'
   update "Downloading Salesforce CLI tarball ..."
-  cd "$BUILD_DIR/vendor"
+  cd "$BUILD_DIR/"
+  mkdir vendor
+  cd vendor
   curl -fsSL "$URL" | tar xJ
 }
 
 function update_sfdx() {
-  cd $BUILD_DIR/vendor
+  cd "$BUILD_DIR/vendor"
   ./sfdx/bin/sfdx update
   ./sfdx/bin/sfdx --version
   ./sfdx/bin/sfdx plugins --core
