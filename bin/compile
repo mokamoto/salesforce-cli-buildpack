@@ -40,12 +40,6 @@ install_sfdx_cli() {
   chmod -R 755  "$DIR/.local/share/sfdx/cli"
 }
 
-setup_dirs() {
-  local DIR="$1"
-  export PATH="$DIR/.local/share/sfdx/cli/bin:$DIR/.sfdx/bin:$PATH"
-}
-
-
 update_sfdx() {
   shopt -s expand_aliases
   alias sfdx='.local/share/sfdx/cli/bin/sfdx'
@@ -58,7 +52,6 @@ header 'Welcome to salesforce-cli-buildpack!'
 update "Exporting environment directories ..."
 export_env "$ENV_DIR"
 update "Setting up CLI paths ..."
-setup_dirs "$BUILD_DIR"
 update "Starting CLI installation ..."
 install_sfdx_cli "$BUILD_DIR"
 update_sfdx "Updating sfdx plugins..."
