@@ -55,7 +55,7 @@ setup_default_env PATH "bin"
 update "Starting CLI installation ..."
 
 install_sfdx_cli
-update_sfdx
+#update_sfdx
 
 header "DONE! Completed in $(($SECONDS - $START_TIME))s"
 
