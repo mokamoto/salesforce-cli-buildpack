@@ -42,11 +42,13 @@ install_sfdx_cli() {
 
 setup_dirs() {
   local DIR="$1"
-  export PATH="~/.local/share/sfdx/cli/bin:$DIR/.sfdx/bin:$PATH"
+  export PATH="$DIR/.local/share/sfdx/cli/bin:$DIR/.sfdx/bin:$PATH"
 }
 
 
 update_sfdx() {
+  shopt -s expand_aliases
+  alias sfdx='.local/share/sfdx/cli/bin/sfdx'
   sfdx update
   sfdx --version
   sfdx plugins --core
