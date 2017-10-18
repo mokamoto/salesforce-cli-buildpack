@@ -39,9 +39,10 @@ function install_sfdx_cli() {
 }
 
 function update_sfdx() {
-  $BUILD_DIR/sfdx update
-  $BUILD_DIR/sfdx --version
-  $BUILD_DIR/sfdx plugins --core
+  cd $BUILD_DIR
+  $BUILD_DIR/sfdx/bin/sfdx update
+  $BUILD_DIR/sfdx/bin/sfdx --version
+  $BUILD_DIR/sfdx/bin/sfdx plugins --core
 }
 
 header 'Welcome to salesforce-cli-buildpack!'
