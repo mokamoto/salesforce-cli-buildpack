@@ -3,63 +3,59 @@
 
 START_TIME=$SECONDS
 
-# set -x            # debug every command
 set -o errexit    # always exit on error
 set -o pipefail   # don't ignore exit codes when piping output
 unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
 
 ### Configure directories
-CLI_PATH="/tmp/cli"
-BUILD_DIR=${1:-}
-CACHE_DIR=${2:-}
-ENV_DIR=${3:-}
-BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
+BUILD_DIR=$1
+CACHE_DIR=$2
+PROFILE_PATH="$BUILD_DIR/.profile.d/salesforce-cli-buildpack-defaults.sh"
+mkdir -p $(dirname $PROFILE_PATH)
 
-source <(curl -s --retry 3 https://lang-common.s3.amazonaws.com/buildpack-stdlib/v7/stdlib.sh)
+# source <(curl -s --retry 3 https://lang-common.s3.amazonaws.com/buildpack-stdlib/v7/stdlib.sh)
 
 ### Helpful functions
-header() {
+function header() {
   echo "" || true
   echo -e "-----> \e[34m$*\033[0m" || true
   echo "" || true
 }
 
-update() {
+function update() {
   echo -e "       $*" || true
 }
 
-install_sfdx_cli() {
+function setup_default_env (){
+  echo "export $1=\$$1:/app/sfdx/$2" >> $PROFILE_PATH
+}
+
+function install_sfdx_cli() {
   local URL='https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz'
-  local DIR="$1"
   update "Downloading Salesforce CLI tarball ..."
+  rm -rf "$BUILD_DIR/sfdx"
   curl --silent --location "$URL" | tar xJ
-  update "Copying Salesforce CLI binary ..."
-  rm -rf "$DIR/.local/share/sfdx/cli"
-  mkdir -p "$DIR/.local/share/sfdx"
-  cp -r sfdx "$DIR/.local/share/sfdx/cli"
-  chmod -R 755  "$DIR/.local/share/sfdx/cli"
+  chmod -R 755  "$BUILD_DIR/sfdx/bin/"
+  chmod -R 755  "$BUILD_DIR/sfdx/bin/sfdx"
 }
 
-setup_dirs() {
-  local DIR="$1"
-  export PATH="$DIR/.local/share/sfdx/cli/bin:$DIR/.sfdx/bin:$PATH"
-}
-
-update_sfdx() {
-  shopt -s expand_aliases
-  alias sfdx='.local/share/sfdx/cli/bin/sfdx'
-  sfdx update
-  sfdx --version
-  sfdx plugins --core
+function update_sfdx() {
+  $BUILD_DIR/sfdx update
+  $BUILD_DIR/sfdx --version
+  $BUILD_DIR/sfdx plugins --core
 }
 
 header 'Welcome to salesforce-cli-buildpack!'
 update "Exporting environment directories ..."
-export_env "$ENV_DIR"
 update "Setting up CLI paths ..."
-setup_dirs "$BUILD_DIR"
+
+setup_default_env PATH "bin"
+
 update "Starting CLI installation ..."
-install_sfdx_cli "$BUILD_DIR"
-update_sfdx "Updating sfdx plugins..."
+
+install_sfdx_cli
+update_sfdx
+
 header "DONE! Completed in $(($SECONDS - $START_TIME))s"
+
 exit 0
