@@ -29,15 +29,11 @@ update() {
 }
 
 install_sfdx_cli() {
-  # local URL='https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz'
-  local URL='https://developer.salesforce.com/media/salesforce-cli/sfdx-v5.99.1-d7efd75-linux-amd64.tar.xz'
+  local URL='https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz'
   local DIR="$1"
   update "Downloading Salesforce CLI tarball ..."
-  curl --silent --location "https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz" | tar xJ
+  curl --silent --location "$URL" | tar xJ
   update "Copying Salesforce CLI binary ..."
-  # mkdir -p "$DIR/.sfdx/bin/sfdx"
-  # cp sfdx/bin/sfdx "$DIR/.sfdx/bin/sfdx"
-  # chmod -R 755 "$DIR/.sfdx/bin/sfdx"
   rm -rf "$DIR/.local/share/sfdx/cli"
   mkdir -p "$DIR/.local/share/sfdx"
   cp -r sfdx "$DIR/.local/share/sfdx/cli"
@@ -46,7 +42,14 @@ install_sfdx_cli() {
 
 setup_dirs() {
   local DIR="$1"
-  export PATH="$DIR/.local/share/sfdx/cli/bin:$DIR/.sfdx/bin:$PATH"
+  export PATH="~/.local/share/sfdx/cli/bin:$DIR/.sfdx/bin:$PATH"
+}
+
+
+update_sfdx() {
+  sfdx update
+  sfdx --version
+  sfdx plugins --core
 }
 
 header 'Welcome to salesforce-cli-buildpack!'
@@ -56,5 +59,6 @@ update "Setting up CLI paths ..."
 setup_dirs "$BUILD_DIR"
 update "Starting CLI installation ..."
 install_sfdx_cli "$BUILD_DIR"
+update_sfdx "Updating sfdx plugins..."
 header "DONE! Completed in $(($SECONDS - $START_TIME))s"
 exit 0

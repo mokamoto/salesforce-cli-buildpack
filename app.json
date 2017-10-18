@@ -2,13 +2,13 @@
     "name": "salesforce-cli-buildback",
     "version": "1.0.0",
     "description": "Buildpack for the Salesforce CLI",
-    "repository": "https://github.com/wadewegner/salesforce-cli-buildback",
+    "repository": "https://github.com/mokamoto/salesforce-cli-buildback",
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/wadewegner/salesforce-cli-buildback/issues"
+        "url": "https://github.com/mokamoto/salesforce-cli-buildback/issues"
     },
-    "homepage": "https://github.com/wadewegner/salesforce-cli-buildback#readme",
+    "homepage": "https://github.com/mokamoto/salesforce-cli-buildback#readme",
     "dependencies": {
     },
     "devDependencies": {
