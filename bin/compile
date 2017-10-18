@@ -35,8 +35,8 @@ function install_sfdx_cli() {
   update "Downloading Salesforce CLI tarball ..."
   rm -rf "$BUILD_DIR/sfdx"
   curl --silent --location "$URL" | tar xJ
-  chmod -R 755  "$BUILD_DIR/sfdx/bin/"
-  chmod -R 755  "$BUILD_DIR/sfdx/bin/sfdx"
+#  chmod -R 755  "$BUILD_DIR/sfdx/bin/"
+#  chmod -R 755  "$BUILD_DIR/sfdx/bin/sfdx"
 }
 
 function update_sfdx() {
@@ -54,7 +54,7 @@ setup_default_env PATH "bin"
 update "Starting CLI installation ..."
 
 install_sfdx_cli
-update_sfdx
+#update_sfdx
 
 header "DONE! Completed in $(($SECONDS - $START_TIME))s"
 
